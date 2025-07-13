@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image ↔ Base64 Converter</title>
+  <link rel="shortcut icon" href="assets/6.png" type="image/x-icon">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- Navbar -->
+  <nav class="bg-white shadow fixed top-0 w-full z-50">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="flex justify-between items-center h-16">
+        <!-- Logo -->
+        <div class="flex-shrink-0 text-xl font-bold text-blue-700 flex items-center gap-2">
+          <img src="assets/1.png" alt="" class="h-[35px]">
+        </div>
+
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex space-x-6">
+          <a href="index.html" class="text-blue-600 font-semibold hover:underline">Home</a>
+          <a href="image-to-base64.html" class="hover:text-blue-600 font-medium">Image to Base64</a>
+          <a href="base64-to-image.html" class="hover:text-blue-600 font-medium">Base64 to Image</a>
+        </div>
+
+        <!-- Mobile Button -->
+        <div class="md:hidden">
+          <button id="menu-toggle" class="text-gray-700 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden px-4 pb-4 bg-white border-t">
+      <a href="index.html" class="block py-2 text-blue-600 font-semibold">Home</a>
+      <a href="image-to-base64.html" class="block py-2 hover:text-blue-600 font-medium">Image to Base64</a>
+      <a href="base64-to-image.html" class="block py-2 hover:text-blue-600 font-medium">Base64 to Image</a>
+    </div>
+  </nav>
+
+  <!-- Hero Slider -->
+  <section class="pt-16">
+    <div class="relative h-[93vh] w-full overflow-hidden">
+      <img id="sliderImage" src="" alt="Slider" class="w-full h-full object-cover transition-opacity duration-1000" />
+      <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+        <div class="text-white text-center px-4">
+          <h1 class="text-4xl sm:text-5xl font-extrabold mb-4 drop-shadow">Convert Image ↔ Base64 Instantly</h1>
+          <p class="text-lg sm:text-xl font-medium max-w-2xl mx-auto">Fast. Secure. Offline. No server upload.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- About Section -->
+  <section class="max-w-5xl mx-auto px-4 py-[25vh]">
+    <h2 class="text-3xl font-bold mb-6 text-center text-blue-700">About This Tool</h2>
+    <p class="text-lg text-gray-700 text-center leading-relaxed">
+      Our Image ↔ Base64 Converter is a powerful and privacy-first web tool designed for developers, designers,
+      students, and tech enthusiasts. Whether you want to embed images into HTML/CSS without external files,
+      preview Base64-encoded images, or simply understand encoding better — this tool does it all, directly
+      in your browser. No installations, no server processing — just fast, secure conversions at your fingertips.
+    </p>
+  </section>
+
+
+  <!-- Features Section -->
+  <section class="bg-gradient-to-br from-indigo-50 to-blue-100 py-[25vh] px-4">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl font-bold mb-10 text-center text-gray-800">🌟 Key Features</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="p-6 bg-white rounded-xl shadow hover:shadow-lg transition">
+          <h3 class="font-semibold text-xl text-blue-700 mb-2">⚡ Instant Conversion</h3>
+          <p>Convert images to Base64 or vice versa in real-time with lightning-fast performance.</p>
+        </div>
+        <div class="p-6 bg-white rounded-xl shadow hover:shadow-lg transition">
+          <h3 class="font-semibold text-xl text-blue-700 mb-2">🔐 100% Privacy</h3>
+          <p>We respect your privacy — all operations are done locally in your browser. Your files never leave your
+            device.</p>
+        </div>
+        <div class="p-6 bg-white rounded-xl shadow hover:shadow-lg transition">
+          <h3 class="font-semibold text-xl text-blue-700 mb-2">📱 Fully Responsive</h3>
+          <p>Optimized layout for mobile, tablet, and desktop. Convert seamlessly across devices.</p>
+        </div>
+        <div class="p-6 bg-white rounded-xl shadow hover:shadow-lg transition">
+          <h3 class="font-semibold text-xl text-blue-700 mb-2">🖼️ Multi-format Support</h3>
+          <p>Supports common image types like PNG, JPG, JPEG, GIF, and even SVG.</p>
+        </div>
+        <div class="p-6 bg-white rounded-xl shadow hover:shadow-lg transition">
+          <h3 class="font-semibold text-xl text-blue-700 mb-2">📂 Bulk Conversion</h3>
+          <p>Upload multiple images or .txt Base64 files at once and convert them in batches.</p>
+        </div>
+        <div class="p-6 bg-white rounded-xl shadow hover:shadow-lg transition">
+          <h3 class="font-semibold text-xl text-blue-700 mb-2">📏 Shows File Details</h3>
+          <p>See image dimensions, size in KB/MB, and preview directly after conversion.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Who Uses This Tool -->
+  <section class="max-w-5xl mx-auto py-[25vh] px-4">
+    <h2 class="text-3xl font-bold mb-8 text-center text-gray-800">👥 Who Uses This Tool?</h2>
+    <ul class="list-disc list-inside text-lg text-gray-700 space-y-3 leading-relaxed">
+      <li>🧑‍💻 <strong>Developers:</strong> Embedding images into CSS, HTML, or JSON for portability and speed.</li>
+      <li>📚 <strong>Students & Educators:</strong> Learning about encoding and decoding processes in a hands-on way.
+      </li>
+      <li>🎨 <strong>Designers:</strong> Previewing or reusing Base64 assets from design exports or emails.</li>
+      <li>🔐 <strong>Privacy-conscious Users:</strong> Working with sensitive images offline without uploading data.
+      </li>
+      <li>📤 <strong>Freelancers:</strong> Delivering compact, all-in-one code snippets to clients.</li>
+      <li>💾 <strong>Data Engineers:</strong> Converting and verifying inline image data in large datasets.</li>
+    </ul>
+  </section>
+
+
+  <!-- How to Use Section -->
+  <section class="bg-gray-100 py-[25vh] px-4">
+    <div class="max-w-5xl mx-auto text-center">
+      <h2 class="text-3xl font-bold mb-10 text-gray-800">🧭 How to Use</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+        <div class="bg-white p-6 rounded-xl shadow">
+          <h3 class="font-semibold text-xl mb-3">📤 Convert Image to Base64</h3>
+          <ul class="list-decimal list-inside text-gray-700 space-y-2">
+            <li>Click on the “Choose File” button to select your image(s).</li>
+            <li>Click “Convert” to instantly get the Base64 output.</li>
+            <li>Copy the Base64 string, or download it as a .txt file for later use.</li>
+            <li>Optional: Preview the encoded image and check file dimensions and size.</li>
+          </ul>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow">
+          <h3 class="font-semibold text-xl mb-3">📥 Convert Base64 to Image</h3>
+          <ul class="list-decimal list-inside text-gray-700 space-y-2">
+            <li>Paste the Base64 string into the input field or upload a .txt file containing it.</li>
+            <li>Click “Convert” to decode the image.</li>
+            <li>View a live preview of the output image along with size and resolution.</li>
+            <li>Download the image file to your device if needed.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Footer -->
+  <footer class="bg-white border-t mt-10 p-6 text-center text-gray-600">
+    &copy; 2025 <span class="font-semibold text-blue-600">Img ↔ B64 Tool</span> | Built with ❤️ by <a
+      href="https://shoyab-mansoori.web.app/" target="_blank" class="hover:underline text-blue-600">Shoyab Mansoori</a>
+  </footer>
+
+  <!-- JS: Slider + Menu -->
+  <script src="script.js"></script>
+</body>
+
+</html>

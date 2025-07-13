@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image to Base64</title>
+    <link rel="shortcut icon" href="assets/6.png" type="image/x-icon">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.0/jszip.min.js"></script>
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow fixed top-0 w-full z-50">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex-shrink-0 text-xl font-bold text-blue-700 flex items-center gap-2">
+                    <img src="assets/1.png" alt="" class="h-[35px]">
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-6">
+                    <a href="index.html" class="hover:text-blue-600 font-medium">Home</a>
+                    <a href="image-to-base64.html" class="text-blue-600 font-semibold hover:underline">Image to Base64</a>
+                    <a href="base64-to-image.html" class="hover:text-blue-600 font-medium">Base64 to Image</a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="menu-toggle" class="text-gray-700 focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden px-4 pb-4 bg-white border-t">
+            <a href="index.html" class="block py-2 hover:text-blue-600 font-medium">Home</a>
+            <a href="image-to-base64.html" class="block py-2 text-blue-600 font-semibold">Image to Base64</a>
+            <a href="base64-to-image.html" class="block py-2 hover:text-blue-600 font-medium">Base64 to Image</a>
+        </div>
+    </nav>
+
+
+    <!-- Main Content -->
+    <div class="max-w-6xl mx-auto mt-[90px] p-4 sm:p-6 bg-white shadow rounded-xl">
+        <h2 class="text-2xl font-bold text-gray-800 mb-1">Convert Images to Base64 Instantly</h2>
+        <p class="text-md text-gray-600 font-medium mb-10">Upload one or multiple images and get high-quality
+            Base64-encoded output in seconds. Fast, secure, and easy to use!</p>
+
+        <input id="imgInput" type="file" accept="image/*" multiple class="w-full p-2 border rounded mb-6 bg-gray-50" />
+
+        <div class="flex justify-end mb-6">
+            <button onclick="downloadAllAsZip()"
+                class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-sm">
+                Download All as ZIP
+            </button>
+        </div>
+
+        <div id="previewContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </div>
+
+    <!-- Step-by-Step Guide -->
+    <div
+        class="max-w-6xl mx-auto mt-16 px-6 py-10 bg-gradient-to-br from-blue-50 via-white to-indigo-50 rounded-xl shadow-lg">
+        <h2 class="text-3xl font-extrabold text-gray-800 mb-6 text-center">🛠️ How to Convert Images to Base64</h2>
+        <div class="grid gap-6 md:grid-cols-2">
+            <div class="space-y-4 text-gray-700 text-lg">
+                <p><span class="font-bold text-blue-600">Step 1:</span> Click the <strong>“Choose File”</strong> button
+                    above and select your image(s).</p>
+                <p><span class="font-bold text-blue-600">Step 2:</span> Our tool instantly converts your images to
+                    Base64 format.</p>
+                <p><span class="font-bold text-blue-600">Step 3:</span> Preview the image, check dimensions, and copy or
+                    download the encoded output.</p>
+                <p><span class="font-bold text-blue-600">Step 4:</span> Click <strong>“Download All as ZIP”</strong> to
+                    save everything in one click.</p>
+            </div>
+            <div class="flex items-center justify-center">
+                <img src="https://cdn-icons-png.flaticon.com/512/1046/1046750.png" alt="Base64 Guide"
+                    class="w-52 opacity-90">
+            </div>
+        </div>
+    </div>
+
+    <!-- Why It's Useful -->
+    <div class="max-w-6xl mx-auto mt-14 px-6 py-10 bg-white rounded-xl shadow-md">
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">💡 Why Use This Base64 Image Converter?</h2>
+        <div class="grid sm:grid-cols-2 gap-6 text-gray-700 text-md">
+            <div class="bg-gray-50 p-4 rounded shadow hover:shadow-lg transition">
+                <h3 class="font-semibold text-blue-700">🔗 Embed Without Hosting</h3>
+                <p>No need for URLs. Use Base64 in HTML, CSS, or JSON directly.</p>
+            </div>
+            <div class="bg-gray-50 p-4 rounded shadow hover:shadow-lg transition">
+                <h3 class="font-semibold text-blue-700">🛡️ Privacy First</h3>
+                <p>All images are processed in your browser. No uploads, no storage, no tracking.</p>
+            </div>
+            <div class="bg-gray-50 p-4 rounded shadow hover:shadow-lg transition">
+                <h3 class="font-semibold text-blue-700">📱 Mobile Friendly</h3>
+                <p>Responsive and optimized for all devices – mobile, tablet, or desktop.</p>
+            </div>
+            <div class="bg-gray-50 p-4 rounded shadow hover:shadow-lg transition">
+                <h3 class="font-semibold text-blue-700">🧩 Developer Friendly</h3>
+                <p>Perfect for React Native, Flutter, Android, and web development projects.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="max-w-6xl mx-auto mt-14 px-6 py-10 bg-gradient-to-br from-indigo-50 to-blue-100 rounded-xl shadow-lg">
+        <h2 class="text-3xl font-bold text-gray-800 text-center mb-10">✨ Tool Features</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-gray-700 text-md">
+            <div class="bg-white p-4 rounded-xl shadow hover:shadow-xl">
+                <h3 class="font-bold text-blue-800 mb-1">⚡ Instant Conversion</h3>
+                <p>Get your Base64 string within milliseconds after uploading.</p>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow hover:shadow-xl">
+                <h3 class="font-bold text-blue-800 mb-1">📦 Bulk Upload Support</h3>
+                <p>Convert multiple images at once and download them as a single ZIP.</p>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow hover:shadow-xl">
+                <h3 class="font-bold text-blue-800 mb-1">📏 Image Preview & Size</h3>
+                <p>See image dimensions and file size before downloading.</p>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow hover:shadow-xl">
+                <h3 class="font-bold text-blue-800 mb-1">🖼️ High Quality</h3>
+                <p>Maintains the image quality in Base64 format for accurate rendering.</p>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow hover:shadow-xl">
+                <h3 class="font-bold text-blue-800 mb-1">💬 No Sign-Up Needed</h3>
+                <p>Free to use without creating an account or sharing personal info.</p>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow hover:shadow-xl">
+                <h3 class="font-bold text-blue-800 mb-1">🔍 SEO Friendly</h3>
+                <p>Use Base64 for embedding logos or icons directly in your HTML emails or sites.</p>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div
+        class="max-w-6xl mx-auto mt-16 mb-10 p-8 rounded-2xl shadow-xl bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+                <h3 class="text-3xl font-extrabold text-gray-800 mb-2">🚀 Built for Speed. Designed for You.</h3>
+                <p class="text-lg text-gray-700 font-medium max-w-xl">
+                    This Base64 to Image Converter is crafted with care by <span
+                        class="text-indigo-700 font-semibold">Shoyab Mansoori</span> —
+                    delivering lightning-fast conversions and clean previews, all without login or hassle.
+                </p>
+                <p class="mt-3 text-md text-gray-600">
+                    Explore more web tools, apps, and projects made to save your time and simplify your digital life.
+                </p>
+                <a href="https://shoyab-mansoori.web.app/" target="_blank"
+                    class="mt-5 inline-block px-6 py-3 bg-indigo-600 text-white rounded-full text-md font-semibold shadow hover:bg-indigo-700 transition">
+                    🌐 Visit My Portfolio
+                </a>
+            </div>
+            <div class="hidden md:block">
+                <img src="https://cdn-icons-png.flaticon.com/512/841/841364.png" alt="Developer Icon"
+                    class="w-32 h-32 animate-bounce" />
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        const base64Files = [];
+
+        document.getElementById("imgInput").addEventListener("change", function () {
+            const files = this.files;
+            const previewContainer = document.getElementById("previewContainer");
+            previewContainer.innerHTML = "";
+            base64Files.length = 0;
+
+            if (!files.length) return;
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const base64 = e.target.result;
+                    const fileName = file.name.split('.')[0] + ".txt";
+
+                    base64Files.push({ name: fileName, data: base64 });
+
+                    const card = document.createElement("div");
+                    card.className = "bg-gray-50 rounded-lg p-4 shadow flex flex-col items-center";
+
+                    const img = document.createElement("img");
+                    img.src = base64;
+                    img.alt = file.name;
+                    img.className = "w-[300px] h-[300px] object-cover rounded border mb-4";
+
+                    const btn = document.createElement("button");
+                    btn.textContent = `Download ${fileName}`;
+                    btn.className = "mt-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm";
+                    btn.onclick = () => {
+                        const blob = new Blob([base64], { type: "text/plain" });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement("a");
+                        a.href = url;
+                        a.download = fileName;
+                        a.click();
+                        URL.revokeObjectURL(url);
+                    };
+
+                    card.appendChild(img);
+                    card.appendChild(btn);
+                    previewContainer.appendChild(card);
+                };
+
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function downloadAllAsZip() {
+            if (base64Files.length === 0) {
+                alert("No images converted yet.");
+                return;
+            }
+
+            const zip = new JSZip();
+
+            base64Files.forEach(file => {
+                zip.file(file.name, file.data);
+            });
+
+            zip.generateAsync({ type: "blob" }).then(content => {
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(content);
+                link.download = "base64-images.zip";
+                link.click();
+            });
+        }
+
+        document.getElementById("menu-toggle").addEventListener("click", () => {
+      document.getElementById("mobile-menu").classList.toggle("hidden");
+    });
+    </script>
+
+</body>
+
+</html>
