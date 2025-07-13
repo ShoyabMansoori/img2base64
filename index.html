@@ -18,39 +18,41 @@
 
   <!-- Navbar -->
   <nav class="bg-white shadow fixed top-0 w-full z-50">
-    <div class="max-w-6xl mx-auto px-4">
-      <div class="flex justify-between items-center h-16">
-        <!-- Logo -->
-        <div class="flex-shrink-0 text-xl font-bold text-blue-700 flex items-center gap-2">
-          <img src="assets/1.png" alt="" class="h-[35px]">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex-shrink-0 text-xl font-bold text-blue-700 flex items-center gap-2">
+                    <img src="assets/1.png" alt="" class="h-[35px]">
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-6">
+                    <a href="index.html" class="text-blue-600 font-semibold hover:underline">Home</a>
+                    <a href="image-to-base64.html" class="hover:text-blue-600 font-medium">Image to Base64</a>
+                    <a href="base64-to-image.html" class="hover:text-blue-600 font-medium">Base64 to Image</a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="menu-toggle" class="text-gray-700 focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
         </div>
 
-        <!-- Desktop Menu -->
-        <div class="hidden md:flex space-x-6">
-          <a href="index.html" class="text-blue-600 font-semibold hover:underline">Home</a>
-          <a href="image-to-base64.html" class="hover:text-blue-600 font-medium">Image to Base64</a>
-          <a href="base64-to-image.html" class="hover:text-blue-600 font-medium">Base64 to Image</a>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden px-4 pb-4 bg-white border-t">
+            <a href="index.html" class="block py-2 text-blue-600 font-semibold">Home</a>
+            <a href="image-to-base64.html" class="block py-2 hover:text-blue-600 font-medium">Image to Base64</a>
+            <a href="base64-to-image.html" class="block py-2 hover:text-blue-600 font-medium">Base64 to Image</a>
         </div>
+    </nav>
 
-        <!-- Mobile Button -->
-        <div class="md:hidden">
-          <button id="menu-toggle" class="text-gray-700 focus:outline-none">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Mobile Menu -->
-    <div id="mobile-menu" class="hidden md:hidden px-4 pb-4 bg-white border-t">
-      <a href="index.html" class="block py-2 text-blue-600 font-semibold">Home</a>
-      <a href="image-to-base64.html" class="block py-2 hover:text-blue-600 font-medium">Image to Base64</a>
-      <a href="base64-to-image.html" class="block py-2 hover:text-blue-600 font-medium">Base64 to Image</a>
-    </div>
-  </nav>
+  
 
   <!-- Hero Slider -->
   <section class="pt-16">
@@ -162,14 +164,13 @@
     &copy; 2025 <span class="font-semibold text-blue-600">Img ↔ B64 Tool</span> | Built with ❤️ by <a
       href="https://shoyab-mansoori.web.app/" target="_blank" class="hover:underline text-blue-600">Shoyab Mansoori</a>
   </footer>
-
-  <!-- JS: Slider + Menu -->
-  <script src="script.js"></script>
-  <script>
-     document.getElementById("menu-toggle").addEventListener("click", () => {
+<script>
+   document.getElementById("menu-toggle").addEventListener("click", () => {
       document.getElementById("mobile-menu").classList.toggle("hidden");
     });
 </script>
+  <!-- JS: Slider + Menu -->
+  <script src="script.js"></script>
 </body>
 
 </html>
