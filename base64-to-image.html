@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Base64 to Image</title>
+    <link rel="shortcut icon" href="assets/6.png" type="image/x-icon">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.0/jszip.min.js"></script>
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+
+   <div id="header"></div>
+
+    <!-- Main Content -->
+    <div class="max-w-6xl mx-auto mt-[90px] p-6 bg-white shadow rounded-xl">
+        <h2 class="text-2xl font-bold mb-6">Base64 to Image Converter</h2>
+        <p class="text-md text-gray-600 font-medium mb-10">Upload a .txt file containing one or multiple Base64 strings.
+            Instantly preview the images, check dimensions and size, and download them individually or all at once —
+            hassle-free and fast!</p>
+
+        <div class="mb-4">
+            <label class="block font-medium mb-2">Upload Base64 Text Files (.txt)</label>
+            <input type="file" id="bulkInput" accept=".txt" multiple
+                class="block w-full border border-gray-300 p-2 rounded" />
+        </div>
+
+        <button onclick="downloadAllImages()" id="downloadAllBtn"
+            class="hidden mb-6 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+            Download All Images (ZIP)
+        </button>
+
+        <div id="previewContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </div>
+
+    <!-- Step-by-Step Guide -->
+    <div
+        class="max-w-6xl mx-auto mt-16 p-8 bg-gradient-to-br from-white via-gray-50 to-white rounded-xl border border-gray-200 shadow">
+        <h3 class="text-3xl font-bold mb-6 text-gray-800 flex items-center gap-2">🧾 Step-by-Step: Convert Base64 to
+            Image</h3>
+        <ol class="list-decimal list-inside space-y-4 text-gray-700 text-[17px] leading-relaxed">
+            <li>
+                <strong>Prepare Your .txt File:</strong> Use our
+                <a href="/image-to-base64.html" class="text-blue-600 hover:underline font-semibold">Image to Base64
+                    Converter</a>
+                to generate valid Base64 strings. Save each string in `.txt` files (line-by-line or separated).
+            </li>
+            <li>
+                <strong>Upload the Files:</strong> Click on <span class="text-gray-800 font-semibold">"Upload Base64
+                    Text Files (.txt)"</span> and select one or more files.
+            </li>
+            <li>
+                <strong>Preview the Images:</strong> Instantly view images along with dimensions and size.
+            </li>
+            <li>
+                <strong>Download Options:</strong> Either download individual images or click
+                <span class="text-gray-800 font-semibold">"Download All Images (ZIP)"</span> for a bulk ZIP download.
+            </li>
+            <li>
+                <strong>Enjoy Seamless Conversion:</strong> 100% free, browser-based, fast, and secure — no login
+                needed.
+            </li>
+        </ol>
+    </div>
+
+    <!-- How It's Useful -->
+    <div class="max-w-6xl mx-auto mt-14 p-8 bg-white rounded-xl shadow">
+        <h3 class="text-3xl font-bold mb-6 text-gray-800 flex items-center gap-2">🎯 Who Can Benefit from This Tool?
+        </h3>
+        <ul class="list-disc list-inside text-gray-700 text-[17px] space-y-3">
+            <li><strong>Developers:</strong> Decode Base64 from APIs or error logs visually.</li>
+            <li><strong>Designers:</strong> Instantly preview Base64 content from web or CMS code.</li>
+            <li><strong>Students:</strong> Learn how encoding/decoding works in real-world scenarios.</li>
+            <li><strong>SEO Experts & Bloggers:</strong> Validate embedded image sources for newsletters or blog HTML.
+            </li>
+        </ul>
+    </div>
+
+    <!-- Features Section -->
+    <div class="max-w-6xl mx-auto mt-14 p-8 bg-gray-50 rounded-xl border border-gray-200 shadow">
+        <h3 class="text-3xl font-bold mb-6 text-gray-800 flex items-center gap-2">✨ Features You’ll Love</h3>
+        <ul class="grid grid-cols-1 sm:grid-cols-2 gap-5 text-gray-700 text-md">
+            <li>✅ Supports multiple Base64 .txt files</li>
+            <li>✅ Real-time image preview with no delay</li>
+            <li>✅ Displays dimensions (px) and file size (KB/MB)</li>
+            <li>✅ One-click individual image downloads</li>
+            <li>✅ All-in-one ZIP download for bulk images</li>
+            <li>✅ 100% free, secure, and browser-based</li>
+            <li>✅ Mobile-optimized responsive layout</li>
+            <li>✅ No image uploaded to server – runs locally</li>
+        </ul>
+    </div>
+
+
+<div id="footer"></div>
+  <script>
+    // Load header
+    fetch("header.html")
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("header").innerHTML = data;
+
+        // Add menu toggle after header loads
+        document.getElementById("menu-toggle").addEventListener("click", () => {
+          document.getElementById("mobile-menu").classList.toggle("hidden");
+        });
+      });
+
+    // Load footer
+    fetch("footer.html")
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("footer").innerHTML = data;
+      });
+  </script>
+    <script>
+        const imageList = [];
+
+        document.getElementById("bulkInput").addEventListener("change", function () {
+            const files = this.files;
+            const previewContainer = document.getElementById("previewContainer");
+            previewContainer.innerHTML = "";
+            imageList.length = 0;
+
+            if (!files.length) return;
+
+            [...files].forEach(file => {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const base64 = e.target.result.trim();
+                    const imageName = file.name.replace(".txt", "") + ".png";
+
+                    const img = new Image();
+                    img.onload = function () {
+                        const width = img.naturalWidth;
+                        const height = img.naturalHeight;
+
+                        const sizeInBytes = Math.ceil((base64.length * 3) / 4 - (base64.endsWith("==") ? 2 : base64.endsWith("=") ? 1 : 0));
+                        const sizeInKB = (sizeInBytes / 1024).toFixed(2);
+
+                        const card = document.createElement("div");
+                        card.className = "bg-gray-50 rounded-lg p-4 shadow flex flex-col items-center";
+
+                        img.className = "w-[300px] h-[300px] object-contain rounded border mb-2";
+                        card.appendChild(img);
+
+                        const info = document.createElement("p");
+                        info.className = "text-sm text-gray-600 mb-2";
+                        info.textContent = `Size: ${width}px × ${height}px | ~${sizeInKB} KB`;
+                        card.appendChild(info);
+
+                        const btn = document.createElement("button");
+                        btn.textContent = `Download ${imageName}`;
+                        btn.className = "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm";
+                        btn.onclick = () => {
+                            const a = document.createElement("a");
+                            a.href = base64;
+                            a.download = imageName;
+                            a.click();
+                        };
+                        card.appendChild(btn);
+
+                        previewContainer.appendChild(card);
+                        imageList.push({ name: imageName, data: base64 });
+
+                        // Show download all button
+                        document.getElementById("downloadAllBtn").classList.remove("hidden");
+                    };
+
+                    img.src = base64;
+                };
+
+                reader.readAsText(file);
+            });
+        });
+
+        function downloadAllImages() {
+            if (!imageList.length) {
+                alert("No images to download.");
+                return;
+            }
+
+            const zip = new JSZip();
+            imageList.forEach(image => {
+                const base64Data = image.data.split(",")[1]; // Remove header
+                zip.file(image.name, base64ToBlob(base64Data), { binary: true });
+            });
+
+            zip.generateAsync({ type: "blob" }).then(content => {
+                const a = document.createElement("a");
+                a.href = URL.createObjectURL(content);
+                a.download = "all-images.zip";
+                a.click();
+            });
+        }
+
+        function base64ToBlob(base64) {
+            const byteCharacters = atob(base64);
+            const byteArrays = [];
+
+            for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+                const slice = byteCharacters.slice(offset, offset + 512);
+                const byteNumbers = new Array(slice.length);
+                for (let i = 0; i < slice.length; i++) {
+                    byteNumbers[i] = slice.charCodeAt(i);
+                }
+                byteArrays.push(new Uint8Array(byteNumbers));
+            }
+
+            return new Blob(byteArrays, { type: "image/png" });
+        }
+    </script>
+
+    
+</body>
+
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Base64 ↔ Video Converter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+  <div id="header"></div>
+
+  <div class="max-w-6xl mt-[100px] mx-auto bg-white shadow-lg rounded-lg p-6">
+    <h1 class="text-4xl font-bold text-center text-blue-700 mb-6">🎬 Base64 to Video Converter</h1>
+ <p class="text-md text-gray-600 font-medium mb-10">Upload a .txt file containing one or multiple Base64 strings.
+            Instantly preview the video and download them individually or all at once —
+            hassle-free and fast!</p>
+            
+    <input type="file" id="txtInput" accept=".txt" multiple
+      class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 mb-6" />
+
+    <button id="downloadAllVideos"
+      class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded mb-6 transition duration-300">Download
+      All Videos as ZIP</button>
+
+    <div id="videoOutput" class="grid sm:grid-cols-2 gap-6"></div>
+  </div>
+
+  <!-- Step-by-Step Guide -->
+  <div
+    class="max-w-6xl mx-auto mt-16 p-8 bg-gradient-to-br from-white via-gray-50 to-white rounded-xl border border-gray-200 shadow">
+    <h3 class="text-3xl font-bold mb-6 text-gray-800 flex items-center gap-2">🎬 Step-by-Step: Convert Base64 to
+      Video</h3>
+    <ol class="list-decimal list-inside space-y-4 text-gray-700 text-[17px] leading-relaxed">
+      <li>
+        <strong>Prepare Your .txt File:</strong> Use our
+        <a href="/video-to-base64.html" class="text-blue-600 hover:underline font-semibold">Video to Base64
+          Converter</a>
+        to generate valid Base64 strings. Save each string in `.txt` files (one per video or separated line-by-line).
+      </li>
+      <li>
+        <strong>Upload the Files:</strong> Click on <span class="text-gray-800 font-semibold">"Upload Base64
+          Text Files (.txt)"</span> and select one or more files.
+      </li>
+      <li>
+        <strong>Preview the Videos:</strong> Instantly view video players with playback support for each file.
+      </li>
+      <li>
+        <strong>Download Options:</strong> Download videos individually or click
+        <span class="text-gray-800 font-semibold">"Download All Videos (ZIP)"</span> for a bulk ZIP download.
+      </li>
+      <li>
+        <strong>Enjoy Seamless Conversion:</strong> 100% free, browser-based, fast, and secure — no login
+        required.
+      </li>
+    </ol>
+  </div>
+
+  <!-- How It's Useful -->
+  <div class="max-w-6xl mx-auto mt-14 p-8 bg-white rounded-xl shadow">
+    <h3 class="text-3xl font-bold mb-6 text-gray-800 flex items-center gap-2">🎯 Who Can Benefit from This Tool?</h3>
+    <ul class="list-disc list-inside text-gray-700 text-[17px] space-y-3">
+      <li><strong>Developers:</strong> Decode Base64-encoded video streams from APIs or logs and view them instantly.
+      </li>
+      <li><strong>Video Editors:</strong> Preview embedded Base64 videos without needing to decode manually.</li>
+      <li><strong>Educators & Students:</strong> Understand multimedia encoding/decoding in real-world applications.
+      </li>
+      <li><strong>Content Creators:</strong> Quickly verify Base64 video snippets for newsletters, HTML embeds, or
+        demos.</li>
+    </ul>
+  </div>
+
+  <!-- Features Section -->
+  <div class="max-w-6xl mx-auto mt-14 p-8 bg-gray-50 rounded-xl border border-gray-200 shadow">
+    <h3 class="text-3xl font-bold mb-6 text-gray-800 flex items-center gap-2">✨ Features You’ll Love</h3>
+    <ul class="grid grid-cols-1 sm:grid-cols-2 gap-5 text-gray-700 text-md">
+      <li>✅ Supports multiple Base64 .txt files for videos</li>
+      <li>✅ Real-time video preview with playback support</li>
+      <li>✅ Shows video file size (KB/MB)</li>
+      <li>✅ One-click individual video downloads</li>
+      <li>✅ All-in-one ZIP download for multiple videos</li>
+      <li>✅ 100% free, secure, and browser-based</li>
+      <li>✅ Mobile-friendly responsive interface</li>
+      <li>✅ No data uploaded – runs entirely in your browser</li>
+    </ul>
+  </div>
+
+
+  <div id="footer"></div>
+  <script>
+    // Load header
+    fetch("header.html")
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("header").innerHTML = data;
+
+        // Add menu toggle after header loads
+        document.getElementById("menu-toggle").addEventListener("click", () => {
+          document.getElementById("mobile-menu").classList.toggle("hidden");
+        });
+      });
+
+    // Load footer
+    fetch("footer.html")
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("footer").innerHTML = data;
+      });
+  </script>
+  <script>
+    const txtInput = document.getElementById("txtInput");
+    const videoOutput = document.getElementById("videoOutput");
+    const downloadAllBtn = document.getElementById("downloadAllVideos");
+    let zip = new JSZip();
+
+    txtInput.addEventListener("change", () => {
+      videoOutput.innerHTML = "";
+      zip = new JSZip();
+
+      const files = Array.from(txtInput.files);
+
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const base64Data = e.target.result;
+          const videoBlob = base64ToBlob(base64Data);
+          const url = URL.createObjectURL(videoBlob);
+
+          const container = document.createElement("div");
+          container.className = "fade-in border p-4 rounded-lg shadow bg-gray-50";
+
+          const video = document.createElement("video");
+          video.src = url;
+          video.controls = true;
+          video.className = "w-full h-48 mb-3 rounded";
+
+          const downloadBtn = document.createElement("button");
+          downloadBtn.textContent = "Download Video";
+          downloadBtn.className = "bg-blue-600 hover:bg-blue-700 text-white text-sm py-1 px-3 rounded transition mb-2";
+          downloadBtn.onclick = () => saveAs(videoBlob, file.name.replace(/\.txt$/, ".mp4"));
+
+          container.appendChild(video);
+          container.appendChild(downloadBtn);
+          videoOutput.appendChild(container);
+
+          zip.file(file.name.replace(/\.txt$/, ".mp4"), videoBlob);
+        };
+        reader.readAsText(file);
+      });
+    });
+
+    function base64ToBlob(base64) {
+      const parts = base64.split(",");
+      const contentType = parts[0].match(/:(.*?);/)[1];
+      const byteCharacters = atob(parts[1]);
+      const byteArrays = [];
+
+      for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+        const slice = byteCharacters.slice(offset, offset + 512);
+        const byteNumbers = new Array(slice.length);
+        for (let i = 0; i < slice.length; i++) {
+          byteNumbers[i] = slice.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
+      }
+
+      return new Blob(byteArrays, { type: contentType });
+    }
+
+    downloadAllBtn.addEventListener("click", () => {
+      zip.generateAsync({ type: "blob" }).then(blob => {
+        saveAs(blob, "all_videos.zip");
+      });
+    });
+  </script>
+
+  
+</body>
+
+</html>

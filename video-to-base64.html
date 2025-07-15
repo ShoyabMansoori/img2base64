@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bulk Video to Base64 Converter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <style>
+    .fade-in {
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+  <div id="header"></div>
+
+  <div class="max-w-6xl mt-[100px] mx-auto bg-white shadow-lg rounded-lg p-6">
+    <h1 class="text-4xl font-bold text-center text-blue-700 mb-6">🎥 Bulk Video to Base64 Converter</h1>
+    <p class="text-md text-gray-600 font-medium mb-10">Upload one or multiple Video and get high-quality
+      Base64-encoded output in seconds. Fast, secure, and easy to use!</p>
+    <input type="file" id="videoInput" accept="video/*" multiple
+      class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 mb-6" />
+
+    <button id="downloadZipBtn"
+      class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded mb-6 transition duration-300">Download
+      All as ZIP</button>
+
+    <div id="progressContainer" class="w-full bg-gray-200 rounded h-4 mb-6 hidden">
+      <div id="progressBar" class="bg-green-500 h-4 rounded" style="width: 0%;"></div>
+    </div>
+
+    <div id="videoPreview" class="grid sm:grid-cols-2 gap-6"></div>
+  </div>
+
+  <!-- Step-by-Step Guide -->
+  <div
+    class="max-w-6xl mx-auto mt-16 px-6 py-10 bg-gradient-to-br from-blue-50 via-white to-indigo-50 rounded-xl shadow-lg">
+    <h2 class="text-3xl font-extrabold text-gray-800 mb-6 text-center">🎬 How to Convert Videos to Base64</h2>
+    <div class="grid gap-6 md:grid-cols-2">
+      <div class="space-y-4 text-gray-700 text-lg">
+        <p><span class="font-bold text-blue-600">Step 1:</span> Click the <strong>“Choose File”</strong> button above
+          and select your video(s).</p>
+        <p><span class="font-bold text-blue-600">Step 2:</span> Our tool instantly converts your videos to Base64 format
+          in your browser.</p>
+        <p><span class="font-bold text-blue-600">Step 3:</span> Preview file info, check size, and copy or download the
+          Base64 output.</p>
+        <p><span class="font-bold text-blue-600">Step 4:</span> Click <strong>“Download All as ZIP”</strong> to save all
+          encoded files at once.</p>
+      </div>
+      <div class="flex items-center justify-center">
+        <img src="https://cdn-icons-png.flaticon.com/512/2931/2931473.png" alt="Base64 Video Guide"
+          class="w-52 opacity-90">
+      </div>
+    </div>
+  </div>
+
+  <!-- Why It's Useful -->
+  <div class="max-w-6xl mx-auto mt-14 px-6 py-10 bg-white rounded-xl shadow-md">
+    <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">💡 Why Use This Base64 Video Converter?</h2>
+    <div class="grid sm:grid-cols-2 gap-6 text-gray-700 text-md">
+      <div class="bg-gray-50 p-4 rounded shadow hover:shadow-lg transition">
+        <h3 class="font-semibold text-blue-700">🔗 Hostless Embedding</h3>
+        <p>Embed videos directly in HTML, JSON, or APIs without external hosting.</p>
+      </div>
+      <div class="bg-gray-50 p-4 rounded shadow hover:shadow-lg transition">
+        <h3 class="font-semibold text-blue-700">🛡️ 100% Privacy</h3>
+        <p>All conversions happen locally in your browser. No uploads. No tracking.</p>
+      </div>
+      <div class="bg-gray-50 p-4 rounded shadow hover:shadow-lg transition">
+        <h3 class="font-semibold text-blue-700">📱 Mobile Optimized</h3>
+        <p>Works smoothly on all devices — smartphones, tablets, or desktops.</p>
+      </div>
+      <div class="bg-gray-50 p-4 rounded shadow hover:shadow-lg transition">
+        <h3 class="font-semibold text-blue-700">⚙️ Developer Friendly</h3>
+        <p>Use in web, mobile apps, APIs, and documentation for seamless video handling.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <div class="max-w-6xl mx-auto mt-14 px-6 py-10 bg-gradient-to-br from-indigo-50 to-blue-100 rounded-xl shadow-lg">
+    <h2 class="text-3xl font-bold text-gray-800 text-center mb-10">✨ Tool Features</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-gray-700 text-md">
+      <div class="bg-white p-4 rounded-xl shadow hover:shadow-xl">
+        <h3 class="font-bold text-blue-800 mb-1">⚡ Instant Conversion</h3>
+        <p>Get your video Base64 string instantly after upload.</p>
+      </div>
+      <div class="bg-white p-4 rounded-xl shadow hover:shadow-xl">
+        <h3 class="font-bold text-blue-800 mb-1">📦 Bulk File Support</h3>
+        <p>Convert multiple videos and download all encoded files as a ZIP archive.</p>
+      </div>
+      <div class="bg-white p-4 rounded-xl shadow hover:shadow-xl">
+        <h3 class="font-bold text-blue-800 mb-1">📁 File Details</h3>
+        <p>Displays size and type info before copying or downloading the Base64 output.</p>
+      </div>
+      <div class="bg-white p-4 rounded-xl shadow hover:shadow-xl">
+        <h3 class="font-bold text-blue-800 mb-1">🎥 High-Quality Encoding</h3>
+        <p>Preserves video quality for embedding and API usage.</p>
+      </div>
+      <div class="bg-white p-4 rounded-xl shadow hover:shadow-xl">
+        <h3 class="font-bold text-blue-800 mb-1">🆓 No Registration</h3>
+        <p>No login or personal info needed. Free and simple to use.</p>
+      </div>
+      <div class="bg-white p-4 rounded-xl shadow hover:shadow-xl">
+        <h3 class="font-bold text-blue-800 mb-1">💻 Ideal for Devs</h3>
+        <p>Perfect for code snippets, testing, or Base64 embedding in documentation.</p>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="footer"></div>
+  <script>
+    // Load header
+    fetch("header.html")
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("header").innerHTML = data;
+
+        // Add menu toggle after header loads
+        document.getElementById("menu-toggle").addEventListener("click", () => {
+          document.getElementById("mobile-menu").classList.toggle("hidden");
+        });
+      });
+
+    // Load footer
+    fetch("footer.html")
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("footer").innerHTML = data;
+      });
+  </script>
+
+  <script>
+    const input = document.getElementById("videoInput");
+    const preview = document.getElementById("videoPreview");
+    const downloadZipBtn = document.getElementById("downloadZipBtn");
+    const progressBar = document.getElementById("progressBar");
+    const progressContainer = document.getElementById("progressContainer");
+    let zip = new JSZip();
+
+    input.addEventListener("change", async function () {
+      preview.innerHTML = "";
+      zip = new JSZip();
+
+      const files = Array.from(this.files);
+      for (const file of files) {
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+          const base64 = e.target.result;
+
+          const container = document.createElement("div");
+          container.className = "fade-in border p-4 rounded-lg shadow bg-gray-50";
+
+          const video = document.createElement("video");
+          video.src = base64;
+          video.controls = true;
+          video.className = "w-full h-48 mb-3 rounded";
+
+          const downloadBtn = document.createElement("button");
+          downloadBtn.textContent = "Download Base64";
+          downloadBtn.className = "bg-blue-600 hover:bg-blue-700 text-white text-sm py-1 px-3 rounded transition mb-2";
+          downloadBtn.onclick = () => {
+            const blob = new Blob([base64], { type: "text/plain;charset=utf-8" });
+            saveAs(blob, file.name.replace(/\.[^/.]+$/, "") + ".txt");
+          };
+
+          const textarea = document.createElement("textarea");
+          textarea.value = base64;
+          textarea.readOnly = true;
+          textarea.className = "w-full text-xs p-2 border bg-white rounded resize-none h-24";
+
+          container.appendChild(video);
+          container.appendChild(downloadBtn);
+          container.appendChild(textarea);
+          preview.appendChild(container);
+
+          zip.file(file.name.replace(/\.[^/.]+$/, "") + ".txt", base64);
+        };
+
+        reader.readAsDataURL(file);
+      }
+    });
+
+    downloadZipBtn.addEventListener("click", () => {
+      progressContainer.classList.remove("hidden");
+      progressBar.style.width = "0%";
+
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += 5;
+        progressBar.style.width = progress + "%";
+        if (progress >= 100) {
+          clearInterval(interval);
+          zip.generateAsync({ type: "blob" })
+            .then(blob => {
+              saveAs(blob, "videos_base64.zip");
+              progressContainer.classList.add("hidden");
+            });
+        }
+      }, 100);
+    });
+  </script>
+
+</body>
+
+</html>
